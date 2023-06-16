@@ -1,0 +1,78 @@
+[
+    {
+        "id": "e5a0c3cf45a1d5b0",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "4dfcf5823543441b",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "mq.jreichwald.de",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "5",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "f6c8d74fce958528",
+        "type": "mqtt in",
+        "z": "e5a0c3cf45a1d5b0",
+        "name": "",
+        "topic": "plantguruAI/#",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "4dfcf5823543441b",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 150,
+        "y": 120,
+        "wires": [
+            [
+                "1d5c662149a3d8c2"
+            ]
+        ]
+    },
+    {
+        "id": "1d5c662149a3d8c2",
+        "type": "debug",
+        "z": "e5a0c3cf45a1d5b0",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": true,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 350,
+        "y": 140,
+        "wires": []
+    }
+]

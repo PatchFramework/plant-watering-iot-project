@@ -1,0 +1,62 @@
+version: "3.7"
+services:
+  
+  nodered:
+    container_name: plant-nodered
+    image: nodered/node-red
+    volumes:
+      - ./nodered/data:/data
+    ports:
+      - target: 1880
+        published: 1880
+        protocol: tcp
+        mode: host
+  
+  grafana:
+    container_name: plant-grafana
+    image: grafana/grafana
+    volumes:
+      - ./grafana/data:/var/lib/grafana
+    ports:
+      - target: 3000
+        published: 3000
+        protocol: tcp
+        mode: host
+
+  influxdb:
+    container_name: plant-influxdb
+    image: influxdb
+    environment: # the following setup is only run on first setup of the influx container and ignored afterwards
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: fluxi
+      DOCKER_INFLUXDB_INIT_PASSWORD: changeme
+      DOCKER_INFLUXDB_INIT_ORG: platguruai
+      DOCKER_INFLUXDB_INIT_BUCKET: bucket
+    ports:
+      - target: 8086
+        published: 8086
+        protocol: tcp
+        mode: host
+    volumes:
+      - ./influxdb/config:/etc/influxdb2
+      - ./influxdb/data:/var/lib/influxdb2
+      - ./influxdb/scripts:/docker-entrypoint-initdb.d
+
+  mosquitto:
+    env_file: .env
+    user: "${UID}:${GID}" # set the current user id and user group inside the container as well -> read/write permissions on the mounted volumes
+    container_name: plant-mosquitto
+    image: eclipse-mosquitto
+    ports:
+      - target: 1883
+        published: 1883
+        protocol: tcp
+        mode: host
+      - target: 9001
+        published: 9001
+        protocol: tcp
+        mode: host
+    volumes:
+      - ./mosquitto/config/:/mosquitto/config/
+      #- ./mosquitto/log/:/mosquitto/log/
+      - ./mosquitto/data:/mosquitto/data/
