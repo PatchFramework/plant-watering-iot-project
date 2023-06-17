@@ -1,7 +1,7 @@
 [default]
   url = "http://localhost:8086"
-  token = "6eUdyAt34IbaVDaURVFwawUYI8uFuPetdU4tIwHIxp523GVtlWuzrJabQ-wstzM9KE7521WdElAFDYkY_4PSDQ=="
-  org = "platguruai"
+  token = "supersecrettoken"
+  org = "plantguruai"
   active = true
 # 
 # [eu-central]

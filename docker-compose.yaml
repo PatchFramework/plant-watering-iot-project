@@ -30,8 +30,9 @@ services:
       DOCKER_INFLUXDB_INIT_MODE: setup
       DOCKER_INFLUXDB_INIT_USERNAME: fluxi
       DOCKER_INFLUXDB_INIT_PASSWORD: changeme
-      DOCKER_INFLUXDB_INIT_ORG: platguruai
+      DOCKER_INFLUXDB_INIT_ORG: plantguruai
       DOCKER_INFLUXDB_INIT_BUCKET: bucket
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: supersecrettoken
     ports:
       - target: 8086
         published: 8086

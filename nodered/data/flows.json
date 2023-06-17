@@ -38,6 +38,31 @@
         "sessionExpiry": ""
     },
     {
+        "id": "44038c3a25e36998",
+        "type": "telegram bot",
+        "botname": "PlantGuru_bot",
+        "usernames": "",
+        "chatids": "",
+        "baseapiurl": "",
+        "updatemode": "polling",
+        "pollinterval": "",
+        "usesocks": false,
+        "sockshost": "",
+        "socksprotocol": "socks4",
+        "socksport": "",
+        "socksusername": "",
+        "sockspassword": "",
+        "bothost": "",
+        "botpath": "",
+        "localbotport": "",
+        "publicbotport": "",
+        "privatekey": "",
+        "certificate": "",
+        "useselfsignedcertificate": false,
+        "sslterminated": false,
+        "verboselogging": false
+    },
+    {
         "id": "f6c8d74fce958528",
         "type": "mqtt in",
         "z": "e5a0c3cf45a1d5b0",
@@ -54,7 +79,7 @@
         "y": 120,
         "wires": [
             [
-                "1d5c662149a3d8c2"
+                "60aaec5b97af9161"
             ]
         ]
     },
@@ -71,8 +96,115 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 370,
-        "y": 120,
+        "x": 1070,
+        "y": 300,
         "wires": []
+    },
+    {
+        "id": "cc616bf7cb9f3baa",
+        "type": "inject",
+        "z": "e5a0c3cf45a1d5b0",
+        "name": "",
+        "props": [
+            {
+                "p": "payload.type",
+                "v": "message",
+                "vt": "str"
+            },
+            {
+                "p": "payload.chatId",
+                "v": "5853793538",
+                "vt": "str"
+            },
+            {
+                "p": "payload.content",
+                "v": "U mama",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 170,
+        "y": 300,
+        "wires": [
+            [
+                "ac568b4364c155b1"
+            ]
+        ]
+    },
+    {
+        "id": "ac568b4364c155b1",
+        "type": "telegram sender",
+        "z": "e5a0c3cf45a1d5b0",
+        "name": "",
+        "bot": "44038c3a25e36998",
+        "haserroroutput": false,
+        "outputs": 1,
+        "x": 880,
+        "y": 300,
+        "wires": [
+            [
+                "1d5c662149a3d8c2"
+            ]
+        ]
+    },
+    {
+        "id": "0e7a8bd0f1b58c05",
+        "type": "function",
+        "z": "e5a0c3cf45a1d5b0",
+        "name": "Configure Telegram Message",
+        "func": "// example structure\n/*\n{\n2023-06-17 09:18:08   topic: 'plantguruAI/systems/test/test',\n2023-06-17 09:18:08   payload: { test: 'test' },\n2023-06-17 09:18:08   qos: 0,\n2023-06-17 09:18:08   retain: false,\n2023-06-17 09:18:08   _msgid: '156846f6df91640d'\n2023-06-17 09:18:08 }\n*/\n\nconsole.log(msg)\n\n// deconstruct the notifications in the plantguruAI topic\nvar construct_msg = {}\nconstruct_msg.payload = {}\nconstruct_msg.payload.content = `Your mum said: ${JSON.stringify(msg.payload)}`\nconstruct_msg.payload.type = \"message\"\nconstruct_msg.payload.chatId = \"5853793538\"\n\nreturn construct_msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 620,
+        "y": 120,
+        "wires": [
+            [
+                "ac568b4364c155b1"
+            ]
+        ]
+    },
+    {
+        "id": "60aaec5b97af9161",
+        "type": "function",
+        "z": "e5a0c3cf45a1d5b0",
+        "name": "Preprocess msg",
+        "func": "// deconstruct input \n\n// read file to persist mapping\n// const fs = require('fs');\n\n// function readPlantMapping() {\n//     var plant_system_map;\n//     try {\n//         plant_system_map = fs.readFileSync('/data/persistence/plant_esp_mapping.json', 'utf8');\n//         //console.log(plant_system_map);\n//     } catch (err) {\n//         console.error(err);\n//     }\n//     return plant_system_map;\n// }\n\n// function writePlantMapping(content) {\n//     fs.writeFile('/data/persistence/plant_esp_mapping.json', content, err => {\n//         if (err) {\n//             console.error(err);\n//         }\n//     });\n// }\n\n// use hardcoded mapping instead\nvar plantSystemMap = {\n    \"706c616e74677572752d74657374\": { \"name\": \"Dracaena\", \"place\": \"outdoor\" }\n} \n\n\nconsole.log(msg)\n\n// deconstruct from who the message came \nconst topic = String(msg.topic);\nconst topic_structure = topic.split(\"/\")\n\nvar sensor = {}\nconsole.log(topic)\n\n// expected topic structure: plantguruAI/systems/<system id>/sensor\nif ( topic.endsWith(\"sensor\") ) {\n    const system_id = topic_structure[2]\n    // read plant name and location mapping to esp id\n    //var plantSystemMap = readPlantMapping();\n    if ( !(plantSystemMap.hasOwnProperty(system_id)) ) {\n        console.log(\"ESP is unknown. Assigning it the plant name 'Default Plant' and location to 'indoor'\")\n        plantSystemMap[system_id] = {\"name\": \"Default Plant\", \"place\": \"indoor\"}\n        // write modified mapping back to persistence\n        //writePlantMapping(plantSystemMap);\n    }\n    \n    sensor.payload = msg.payload\n    sensor.payload.plantName = plantSystemMap[system_id][\"name\"]\n    sensor.payload.plantPlace = plantSystemMap[system_id][\"place\"]\n}\n\nconsole.log(\"Sensor\", sensor)\nreturn sensor;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 120,
+        "wires": [
+            [
+                "0e7a8bd0f1b58c05"
+            ]
+        ]
+    },
+    {
+        "id": "eaa260f89f4fbe31",
+        "type": "file in",
+        "z": "e5a0c3cf45a1d5b0",
+        "name": "Read Plant to ESP ID mapping",
+        "filename": "/data/persistence/plant_esp_mapping.json",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 150,
+        "y": 220,
+        "wires": [
+            []
+        ]
     }
 ]

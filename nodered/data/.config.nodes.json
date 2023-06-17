@@ -437,5 +437,49 @@
                 "file": "/data/node_modules/node-red-contrib-influxdb/influxdb.js"
             }
         }
+    },
+    "node-red-contrib-python-function": {
+        "name": "node-red-contrib-python-function",
+        "version": "0.0.5",
+        "local": true,
+        "user": true,
+        "nodes": {
+            "python-function": {
+                "name": "python-function",
+                "types": [
+                    "python-function"
+                ],
+                "enabled": true,
+                "local": true,
+                "user": false,
+                "module": "node-red-contrib-python-function",
+                "file": "/data/node_modules/node-red-contrib-python-function/lib/python-function.js"
+            }
+        }
+    },
+    "node-red-contrib-telegrambot": {
+        "name": "node-red-contrib-telegrambot",
+        "version": "15.1.1",
+        "local": true,
+        "user": true,
+        "nodes": {
+            "telegrambot": {
+                "name": "telegrambot",
+                "types": [
+                    "telegram bot",
+                    "telegram receiver",
+                    "telegram command",
+                    "telegram event",
+                    "telegram sender",
+                    "telegram reply",
+                    "telegram control"
+                ],
+                "enabled": true,
+                "local": true,
+                "user": false,
+                "module": "node-red-contrib-telegrambot",
+                "file": "/data/node_modules/node-red-contrib-telegrambot/telegrambot/99-telegrambot.js"
+            }
+        }
     }
 }
